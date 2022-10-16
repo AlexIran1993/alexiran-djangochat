@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo chat | {% endblock %}
+
+{% block content %}
+
+<div class="p-10 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Nuevo chat</h1>
+</div>
+
+<form method="POST" action="{% url 'nuevochat' %}" class="lg:w-1/4 mx-auto">
+    {% csrf_token %}
+    <div class="mb-5">
+        <input type="text", class="w-full mt-2 px-2 py-2 rounded-xl" placeholder="Ingrese el nombre del nuevo chat", name="name">
+    </div>
+    <div class="mb-5 text-center">
+        <button class="w-full mt-2 px-2 py-2 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Crear</button>
+    </div>
+</form>
+
+{% endblock %}

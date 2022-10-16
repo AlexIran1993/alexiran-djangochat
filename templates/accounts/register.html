@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Sing up | {% endblock %}
+{% block content %}
+
+<div class="p-10 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Sign up</h1>
+</div>
+
+
+
+<form method="POST" action="{% url 'register' %}" class="lg:w-1/4 mx-auto">
+    {% csrf_token %}
+        <!--Mensaje de alerta-->
+        {% include 'includes/alerts.html' %}
+        <div class="mb-5">
+            <label class="text-white">Nombre</label>
+            {{form.first_name}}
+        </div>
+        <div class="mb-5">
+            <label class="text-white">Apellido</label>
+            {{form.last_name}}
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="text-white">Numero telofonico</label>
+                {{form.phone_number}}
+            </div>
+            <div class="form-group col-md-6">
+                <label class="text-white">Email</label>
+                {{form.email}}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="text-white">Crear password</label>
+                {{form.password}}
+            </div> <!-- form-group end.// -->
+            <div class="form-group col-md-6">
+                <label class="text-white">Repetir password</label>
+                {{form.confirm_password}}
+            </div> <!-- form-group end.// -->
+        </div>
+        <div class="mb-5 text-center">
+            <button class="w-full mt-2 px-2 py-2 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Registrar</button>
+        </div>
+        
+        <!--Validacion para el campo de email-->
+        {{ form.email.errors }}
+        <!--Mensaje de error cuando el el password no coincide-->
+        {{form.non_field_errors}}
+</form>
+
+<p class="text-white text-center">Tienes una cuenta? <a href="{% url 'login' %}">Log In</a></p>
+{% endblock%}
+
