@@ -4,8 +4,12 @@ from .models import Room, Message
 
 #Auto llenado del campo slug con la data de name / campos mostrados en el grid de Django
 class RoomsAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'slug')
+    prepopulated_fields = {'slug': ('invitado',)}
+    list_display = ('creador','invitado','slug')
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('room', 'user', 'date_added')
+
 
 admin.site.register(Room, RoomsAdmin)
-admin.site.register(Message)
+admin.site.register(Message, MessageAdmin)
