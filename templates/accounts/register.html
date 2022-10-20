@@ -6,51 +6,66 @@
     <h1 class="text-3xl lg:text-6xl text-white">Sign up</h1>
 </div>
 
+<div class="card mx-auto" style="max-width: 380px; margin-top:10px;">
+    <div class="card-body">
 
-
-<form method="POST" action="{% url 'register' %}" class="lg:w-1/4 mx-auto">
-    {% csrf_token %}
-        <!--Mensaje de alerta-->
-        {% include 'includes/alerts.html' %}
-        <div class="mb-5">
-            <label class="text-white">Nombre</label>
-            {{form.first_name}}
-        </div>
-        <div class="mb-5">
-            <label class="text-white">Apellido</label>
-            {{form.last_name}}
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label class="text-white">Numero telofonico</label>
-                {{form.phone_number}}
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            <!--Mensaje de alerta-->
+            {% include 'includes/alerts.html' %}
+            <div class="mb-5">
+                <label class="text-white">Nombre</label>
+                {{form.first_name}}
             </div>
-            <div class="form-group col-md-6">
-                <label class="text-white">Email</label>
-                {{form.email}}
+            <div class="mb-5">
+                <label class="text-white">Apellido</label>
+                {{form.last_name}}
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label class="text-white">Crear password</label>
-                {{form.password}}
-            </div> <!-- form-group end.// -->
-            <div class="form-group col-md-6">
-                <label class="text-white">Repetir password</label>
-                {{form.confirm_password}}
-            </div> <!-- form-group end.// -->
-        </div>
-        <div class="mb-5 text-center">
-            <button class="w-full mt-2 px-2 py-2 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Registrar</button>
-        </div>
-        
-        <!--Validacion para el campo de email-->
-        {{ form.email.errors }}
-        <!--Mensaje de error cuando el el password no coincide-->
-        {{form.non_field_errors}}
-</form>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="text-white">Numero telofonico</label>
+                    {{form.phone_number}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="text-white">Email</label>
+                    {{form.email}}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="text-white">Crear password</label>
+                    {{form.password}}
+                </div> <!-- form-group end.// -->
+                <div class="form-group col-md-6">
+                    <label class="text-white">Repetir password</label>
+                    {{form.confirm_password}}
+                </div> <!-- form-group end.// -->
+            </div>
+
+            <div class="mb-5 text-center">
+                <button
+                    class="group relative flex w-full justify-center rounded-md border border-transparent bg-teal-800 py-2 px-4 text-sm font-medium text-white hover:bg-teal-700">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <!-- Heroicon name: mini/lock-closed -->
+                        <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    Registrar
+                </button>
+            </div>
+
+            <!--Validacion para el campo de email-->
+            {{ form.email.errors }}
+            <!--Mensaje de error cuando el el password no coincide-->
+            {{form.non_field_errors}}
+        </form>
+    </div>
+</div>
 
 <p class="text-white text-center">Tienes una cuenta? <a href="{% url 'login' %}">Log In</a></p>
 {% endblock%}
-

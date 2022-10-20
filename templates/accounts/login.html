@@ -3,29 +3,37 @@
 {% block content %}
 {% include 'includes/alerts.html' %}
 
-    {% if request.GET.command == 'varification' %}
-        <div class="container mx-auto alert alert-info" role="alert" style="max-width:380px; margin-top:100px;">
-            Se ha enviado un email de activacion al correo [{{request.GET.email}}]
-            <br><br>
-            Si tu cuenta ya esta activada, haz click <a href="{% url 'login' %}">aqui.</a>
-        </div>
-    {% else %}
-        <div class="p-10 text-center">
-            <h1 class="text-3xl lg:text-6xl text-white">Log in</h1>
-        </div>
-
-        <form method="POST" action="{% url 'login' %}" class="lg:w-1/4 mx-auto">
+{% if request.GET.command == 'varification' %}
+<div class="container mx-auto alert alert-info" role="alert" style="max-width:380px; margin-top:100px;">
+    Se ha enviado un email de activacion al correo [{{request.GET.email}}]
+    <br><br>
+    Si tu cuenta ya esta activada, haz click <a href="{% url 'login' %}">aqui.</a>
+</div>
+{% else %}
+<div class="p-10 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Log in</h1>
+</div>
+<div class="card mx-auto" style="max-width: 380px; margin-top:10px;">
+    <div class="card-body">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="mb-5">
-                <input type="email", class="w-full mt-2 px-2 py-2 rounded-xl" placeholder="Email", name="email">
+                <input type="email" , class="w-full mt-2 px-2 py-2 rounded-xl" placeholder="Email" , name="email">
             </div>
             <div class="mb-5">
-                <input type="password", class="w-full mt-2 px-2 py-2 rounded-xl" placeholder="Password", name="password">
+                <input type="password" , class="w-full mt-2 px-2 py-2 rounded-xl" placeholder="Password" ,
+                    name="password">
+            </div>
+            <div class="form-group">
+                <a href="{% url 'forgotPassword' %}" class="float-right text-white">Olvidaste tu password?</a>
             </div>
             <div class="mb-5 text-center">
-                <button class="w-full mt-2 px-2 py-2 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Entrar</button>
+                <button
+                    class="w-full mt-2 px-2 py-2 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Entrar</button>
             </div>
         </form>
-        <p class="text-center text-white">No tienes una cuenta? <a href="{% url 'register'%}">Registrate</a></p>
-    {% endif %}
+    </div>
+</div>
+<p class="text-center text-white">No tienes una cuenta? <a href="{% url 'register'%}">Registrate</a></p>
+{% endif %}
 {% endblock %}

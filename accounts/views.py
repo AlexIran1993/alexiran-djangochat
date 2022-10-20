@@ -1,3 +1,4 @@
+from base64 import urlsafe_b64decode
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from .models import Account
@@ -120,3 +121,98 @@ def activate(request, uidb64, token):
     else:
         messages.error(request,'Activacion invalida')
         return redirect('register')
+
+def forgotPassword(request):
+    #Vaido que el metodo dentro del request sea un POST, de otro modo retorno al template forgotPassword
+    if request.method == 'POST':
+        #Captura el emial de la propiedad email dentro del request y lo almaceno en una variable del mismo nombre
+        email = request.POST['email']
+        #Valido que exita un registro con el mismo email dentro de la tabla Account
+        if Account.objects.filter(email=email).exists():
+            #Busco al usuario 
+            user = Account.objects.get(email__exact=email)
+
+            #Creacion el dominio
+            current_site = get_current_site(request)
+            #Titulo del correo
+            mail_subject = 'Restauracion del Password'
+            #Cuerpo del correo / Direccion del template con las inidicacion para el reset
+            body = render_to_string('accounts/reset_password_email.html', {
+                #Data del usuario
+                'user': user,
+                #Dominio de la restauracion
+                'domain': current_site,
+                #Pk del usuario encriptada
+                'uid': urlsafe_base64_encode(
+                    #Encruptacion de la id en bytes
+                    force_bytes(user.pk)
+                ),
+                #Token creado de manera exclusiva para este usuario
+                'token': default_token_generator.make_token(user)
+            })
+
+            #Variables finales para el envio del correo
+            to_email = email
+            #Objeto con la estructura del correo
+            send_email = EmailMessage(
+                #Titulo del correo
+                mail_subject,
+                #Cuerpo del correo
+                body,
+                #A quien va dirijido
+                to=[to_email]
+            )
+            #Envio del email
+            send_email.send()
+
+            #Mensaje de confirmacion
+            messages.success(request, 'Un email fuen enviado a tu bandeja de entrada para restaurar tu password')
+            return redirect('login')
+
+        else:
+            #En caso de econtrart un valido en la base de datos, retorno al template forgotPassword con un mensaje de tipo error
+            messages.error(request,'El email que ingreso es incorrecto o no existe')
+            return redirect('forgotPassword')
+
+    return render(request, "accounts/forgotPassword.html")
+
+def resetpassword_validate(request, uidb64, token):
+    #Intento del traer el usuario de la base de datos
+    try:
+        #Desemcriptacion del id del usuario
+        uid = urlsafe_base64_decode(uidb64).decode()
+        #Obtencion del usuario con el id desencriptado
+        user = Account._default_manager.get(pk=uid)
+
+    except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+    
+    #Validando que el usuario extraido no sea nulo y coincida con el token enviado como parametro
+    if user is not None and default_token_generator.check_token(user, token):
+        #Asigno el id del usuario a una propiedad llamada uid del request.session
+        request.session['uid'] = uid
+        #Mensaje informando al usuairo de ingresar el nuevo password
+        messages.info(request, 'Porfavor resetea tu password')
+        return redirect('resetPassword')
+    else:
+        #Mensaje explicando que el link para resetera el password expiro
+        messages.error(request, 'El link ha expirado')
+        return redirect('login')
+
+def resetPassword(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            uid = request.session['uid']
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'el password se reseteo correctamente')
+            return redirect('login')
+        else:
+            messages.error(request, 'El password de confirmacion no concuerda')
+            return redirect('resetPassword')
+    else:
+        return render(request, 'accounts/resetPassword.html')

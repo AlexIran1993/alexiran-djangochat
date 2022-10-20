@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     #Libreria de django channels
     'channels',
     'room',
-    'core',
     #Aplicacion para reistrar usuarios
     'accounts',
 ]
@@ -93,12 +92,24 @@ AUTH_USER_MODEL = 'accounts.Account'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangochat_db',
+        'HOST': 'localhost',
+        'USER': 'djangochat',
+        'PASSWORD': 'djangochat_admin',
+        'PODRT': 5432
     }
 }
+
 
 
 # Password validation
