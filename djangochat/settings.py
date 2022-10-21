@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!4_oye84i2u993nopb&vkamg6^hmj6^4l(7l#ytam4r9$9g8m5'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+#Listado de urls que se pueden levantar 
+ALLOWED_HOSTS = ["localhost","127.0.0.1",".herokuapp.com"]
 
 
 # Application definition
@@ -53,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #Middleware para el manejo de archivos estaticos
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'djangochat.urls'
@@ -99,6 +103,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 #    }
 #}
 
+#Base de datos que solo funcionara en local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -146,10 +151,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
+
+#Archivo que ayudara a manejar los archivos estaticos
+STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
+
+
+#Base de datos para desarrollo
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 #Configuracion par el manejo de los mensajes de alerta
 from django.contrib.messages import constants as messages
@@ -158,11 +172,11 @@ MESSAGE_TAGS = {
 }
 
 #Configuracion para la activacion de cuentas a travez de Gmail
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT=587
-EMAIL_HOST_USER='alex.iran.source@gmail.com'
-EMAIL_HOST_PASSWORD='xwftnoycokwvtrpj'
-EMAIL_USE_TLS=True
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT=config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS=config('EMAIL_USE_TLS', cast=bool)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
