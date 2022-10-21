@@ -1,4 +1,3 @@
-from base64 import urlsafe_b64decode
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from .models import Account
