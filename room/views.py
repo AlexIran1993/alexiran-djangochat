@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.shortcuts import render,redirect
 from .models import Room, Message
 from django.contrib.auth.decorators import login_required
