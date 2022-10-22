@@ -19,8 +19,7 @@
 </div>
 
 <div class="lg:w-2/4 mt-6 lg:mx-auto p-4 bg-white rounded-xl">
-    <form action="" method="POST" class="flex">
-        {% csrf_token %}
+    <form method="POST" action="." class="flex">
         <input type="text" name="content" class="flex-1 mr-3" placeholder="Tu mensaje..." id="chat-message-input">
 
         <button class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700" id="chat-message-submit">
@@ -38,36 +37,37 @@
         const userName = JSON.parse(document.getElementById('json-username').textContent);
         const chatSocket = new WebSocket(
             'ws://'
-            +window.location.host
-            +'/ws/'
-            +roomName
-            +'/'
+            + window.location.host
+            + '/ws/'
+            + roomName
+            + '/'
         );
 
-        chatSocket.onclose = function(e){
+        chatSocket.onclose = function (e) {
             console.log('onclose')
         }
 
-        chatSocket.onmessage = function(e){
-            console.log('onmessage')
-
+        chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            if(data.message){
-                let html = '<div class="p-4 bg-gray-200 rounded-xl">';
-                    html += '<p class="font-semibold">' + data.username + '</p>';
-                    html += '<p>' + data.message + '</p></div>';
-
-                document.querySelector('#chat-messages').innerHTML += html;
-                scrollToBottom();
+            if (data.message) {
+                document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
             } else {
                 alert('El mensaje esta vacio!')
             }
+            scrollToBottom();
         }
+    
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            e.preventDefault()
 
-        document.querySelector('#chat-message-submit').onclick = function(e){
-            e.preventDefault();
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
+
+            console.log({
+                'message': message,
+                'username': userName,
+                'room': roomName
+            })
 
             chatSocket.send(JSON.stringify({
                 'message': message,
@@ -76,10 +76,11 @@
             }));
 
             messageInputDom.value = '';
-            return false;
-        }
 
-        function scrollToBottom(){
+            return false
+        };
+
+        function scrollToBottom() {
             const objDiv = document.querySelector('#chat-messages');
             objDiv.scrollTop = objDiv.scrollHeight;
         }
