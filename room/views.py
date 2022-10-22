@@ -14,11 +14,7 @@ def rooms(request):
     for item in rooms:
         if item.creador == request.user.username or item.invitado == request.user.username:
             list_room.append(item)
-    messages = []
-    for item in list_room:
-        cantidad = Message.objects.filter(room=item).count()
-        messages.append(cantidad)
-    print(messages)
+            
     context={
         'rooms':list_room
     }
@@ -28,8 +24,6 @@ def rooms(request):
 def room(request, slug):
     room = Room.objects.get(slug=slug)
     messages = Message.objects.filter(room=room)[0:25]
-    mensaje = messages.count()
-    print(mensaje)
     context = {
         'room':room,
         'messages': messages
