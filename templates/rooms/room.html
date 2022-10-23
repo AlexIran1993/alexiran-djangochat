@@ -19,7 +19,7 @@
 </div>
 
 <div class="lg:w-2/4 mt-6 lg:mx-auto p-4 bg-white rounded-xl">
-    <form method="POST" action="." class="flex">
+    <form action="." class="flex">
         <input type="text" name="content" class="flex-1 mr-3" placeholder="Tu mensaje..." id="chat-message-input">
 
         <button class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700"
@@ -59,14 +59,8 @@
         scrollToBottom();
     };
 
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
     
-    document.querySelector('#chat-message-submit').onclick = function(e) {
+ /*    document.querySelector('#chat-message-submit').onclick = function(e) {
         e.preventDefault()
 
         const messageInputDom = document.querySelector('#chat-message-input');
@@ -87,7 +81,22 @@
         messageInputDom.value = '';
 
         return false
-    };
+    }; */
+
+    $('#chat-message-submit').click(function(e){
+        e.preventDefault()
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }));
+
+        messageInputDom.value = '';
+
+        return false
+    })
 
     function scrollToBottom() {
         let objDiv = document.getElementById("chat-messages");
