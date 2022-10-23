@@ -62,7 +62,6 @@
     
     document.querySelector('#chat-message-submit').onclick = function(e) {
         e.preventDefault()
-
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
 
@@ -77,9 +76,7 @@
             'username': userName,
             'room': roomName
         }));
-
         messageInputDom.value = '';
-
         return false
     };
 
