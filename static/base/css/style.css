@@ -4,6 +4,10 @@
   margin-right: -5px;
   margin-left: -5px;
 }
+.chat-messages {
+  height: 400px;
+  overflow-y: auto;
+}
 .content-header {
   padding: 15px 0.5rem;
 }

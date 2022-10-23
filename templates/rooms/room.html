@@ -42,24 +42,24 @@
         + roomName
         + '/'
     );
+    chatSocket.onmessage = function(e) {
+        console.log('onmessage')
+        const data = JSON.parse(e.data);
+
+        if(data.message){
+            let html = '<div class="p-4 bg-gray-200 rounded-xl">';
+                html += '<p class="font-semibold">' + data.username + '</p>';
+                html += '<p>' + data.message + '</p></div>';
+            document.querySelector('#chat-messages').innerHTML += html;
+        }else{
+            alert('Mensaje vacio!')
+        }
+    };
 
     chatSocket.onclose = function(e) {
         console.log('onclose')
     }
 
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-
-        if (data.message) {
-            document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
-        } else {
-            alert('The message was empty!')
-        }
-
-        scrollToBottom();
-    };
-
-    
     document.querySelector('#chat-message-submit').onclick = function(e) {
         e.preventDefault()
         const messageInputDom = document.querySelector('#chat-message-input');
